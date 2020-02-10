@@ -1,0 +1,8 @@
+@mixin borders($bw, $left-top, $right-bottom) {
+    border-width: $bw;
+    border-style: solid;
+    border-right-color: $right-bottom;
+    border-bottom-color: $right-bottom;
+    border-left-color: $left-top;
+    border-top-color: $left-top;
+}
