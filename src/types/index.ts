@@ -8,13 +8,13 @@ export enum CellValue {
     six,
     seven,
     eight,
-    bomb
+    mine
 };
 
 export enum CellState {
-    open,
+    unclicked,
     flagged,
-    visible
+    clicked
 };
 
 export type Cell = {

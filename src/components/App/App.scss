@@ -29,6 +29,7 @@
     height: 52px;
     font-size: 35px;    
     @include borders(2px, white, #7b7b7b);
+    @include buttons;
     display: flex;
     justify-content: center;
     align-items: center;
