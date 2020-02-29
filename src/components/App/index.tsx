@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import './App.scss';
 import NumberDisplay from '../NumberDisplay';
 import {generateCells} from '../../utils';
@@ -7,6 +7,18 @@ import Button from '../Button';
 
 const App : React.FC = () => {
     const [cells, setCells] = useState(generateCells());
+    const [face, setFace] = useState(Face.smile);
+
+    useEffect(() => {
+        const handleMouseDown = () => {
+            setFace(Face.oh);
+        };
+        const handleMouseUp = () => {
+          setFace(Face.smile);
+        };
+        window.addEventListener("mousedown", handleMouseDown);
+        window.addEventListener("mouseup", handleMouseUp);
+    }, []);
     const renderCells = () : React.ReactNode => {
         return cells.map((row, rowIndex) => row.map((cell, cellIndex) => 
             <Button 
@@ -23,7 +35,7 @@ const App : React.FC = () => {
             <div className="Header">
                 <NumberDisplay value={0} />
                     <div className="Face">
-                        <span role="img" aria-label="face">{Face.smile}</span>
+                        <span role="img" aria-label="face">{face}</span>
                     </div>
                 <NumberDisplay value={0} />
             </div>
