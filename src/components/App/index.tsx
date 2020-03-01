@@ -2,12 +2,14 @@ import React, {useState, useEffect} from 'react';
 import './App.scss';
 import NumberDisplay from '../NumberDisplay';
 import {generateCells} from '../../utils';
-import {Face} from '../../types';
+import {Face, Cell} from '../../types';
 import Button from '../Button';
 
 const App : React.FC = () => {
-    const [cells, setCells] = useState(generateCells());
-    const [face, setFace] = useState(Face.smile);
+    const [cells, setCells] = useState<Cell[][]>(generateCells());
+    const [face, setFace] = useState<Face>(Face.smile);
+    const [time, setTime] = useState<number>(0);
+    const [live, isLive] = useState<boolean>(false);
 
     useEffect(() => {
         const handleMouseDown = () => {
@@ -18,6 +20,10 @@ const App : React.FC = () => {
         };
         window.addEventListener("mousedown", handleMouseDown);
         window.addEventListener("mouseup", handleMouseUp);
+        return () => {
+          window.removeEventListener("mousedown", handleMouseDown);
+          window.removeEventListener("mouseup", handleMouseUp);
+        };
     }, []);
     const renderCells = () : React.ReactNode => {
         return cells.map((row, rowIndex) => row.map((cell, cellIndex) => 
@@ -37,7 +43,7 @@ const App : React.FC = () => {
                     <div className="Face">
                         <span role="img" aria-label="face">{face}</span>
                     </div>
-                <NumberDisplay value={0} />
+                <NumberDisplay value={time} />
             </div>
             <div className="Body">
                 {renderCells()}
