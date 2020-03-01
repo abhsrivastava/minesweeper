@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
 import './App.scss';
 import NumberDisplay from '../NumberDisplay';
-import {generateCells} from '../../utils';
-import {Face, Cell} from '../../types';
+import {MAX_MINES, generateCells} from '../../utils';
+import {Face, Cell, CellState} from '../../types';
 import Button from '../Button';
 
 const App : React.FC = () => {
@@ -10,6 +10,7 @@ const App : React.FC = () => {
     const [face, setFace] = useState<Face>(Face.smile);
     const [time, setTime] = useState<number>(0);
     const [live, setLive] = useState<boolean>(false);
+    const [remainingMineCount, setRemainingMineCount] = useState<number>(MAX_MINES);
 
     useEffect(() => {
         const handleMouseDown = () => {
@@ -42,8 +43,26 @@ const App : React.FC = () => {
         setLive(true);
       }
     };
-    const handleContextMenu = (rowParam: number, cellParam: number) => (e: React.MouseEvent<HTMLDivElement, MouseEvent>) : void => {
+    const handleContextMenu = (rowParam: number, cellParam: number) => (e: React.MouseEvent<Element, MouseEvent>) : void => {
       e.preventDefault();
+      if(!live) {
+        return;
+      } 
+
+      const currentCell = cells[rowParam][cellParam]
+      if (currentCell.state === CellState.clicked) {
+        return;
+      } else if (currentCell.state === CellState.unclicked && remainingMineCount > 0) {
+        const copyCells = cells.slice();
+        copyCells[rowParam][cellParam].state = CellState.flagged;
+        setRemainingMineCount(remainingMineCount - 1);
+        setCells(copyCells);
+      } else if (currentCell.state === CellState.flagged) {
+        const copyCells = cells.slice();
+        copyCells[rowParam][cellParam].state = CellState.unclicked;
+        setRemainingMineCount(remainingMineCount + 1);
+        setCells(copyCells);
+      }
     }
     const renderCells = () : React.ReactNode => {
         return cells.map((row, rowIndex) => row.map((cell, cellIndex) => 
@@ -62,13 +81,14 @@ const App : React.FC = () => {
       if (live) {
         setLive(false);
         setTime(0);
+        setRemainingMineCount(MAX_MINES);
         setCells(generateCells());  
       }
     };
     return (
         <div className="App">
             <div className="Header">
-                <NumberDisplay value={0} />
+                <NumberDisplay value={remainingMineCount} />
                 <div className="Face" onClick={onFaceClick}>
                     <span role="img" aria-label="face">{face}</span>
                 </div>

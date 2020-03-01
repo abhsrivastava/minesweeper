@@ -1,5 +1,7 @@
 import {Cell, CellValue, CellState} from '../types';
 
+export const MAX_MINES = 10;
+
 export const generateCells = (): Cell[][] => {
     const MAX_ROWS = 9;
     const MAX_COLS = 9;
@@ -13,7 +15,7 @@ export const generateCells = (): Cell[][] => {
             });
         }
     }
-    const MAX_MINES = 10;
+
     let numberOfMines = 0;
     while(numberOfMines < MAX_MINES) {
         const rowRand = Math.floor(Math.random() * MAX_ROWS);
